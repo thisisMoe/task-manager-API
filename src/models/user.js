@@ -74,7 +74,7 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 /////////////////////////////
-/*The code below adds a tasks field onto users that can be used to fetch the tasks for a given user. It’s a virtual property
+/*( UserTask relationship ) The code below adds a tasks field onto users that can be used to fetch the tasks for a given user. It’s a virtual property
 because users in the database won’t have a tasks field. It’s a reference to the task data stored in the separate collection. */
 userSchema.virtual('tasks', {
     ref: 'Task',
