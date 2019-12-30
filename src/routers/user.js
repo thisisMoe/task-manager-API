@@ -1,9 +1,9 @@
 const express = require('express');
 const User = require('../models/user');
-const sharp = require('sharp')
+const sharp = require('sharp');
 const auth = require('../middlewares/auth');
 const router = new express.Router();
-const { sendWelcomeEmail, sendCancellationEmail } = require('../emails/account')
+const { sendWelcomeEmail, sendCancellationEmail } = require('../emails/account');
 const multer = require('multer');
 
 //User creation endpoint
@@ -130,13 +130,20 @@ const upload = multer({
         cb(undefined, true);
     },
 });
-router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-    //Used sharp module to resize the image and convert it to .png
-    const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
-    req.user.avatar = buffer
-    await req.user.save()
-    res.send();
-},
+router.post(
+    '/users/me/avatar',
+    auth,
+    upload.single('avatar'),
+    async (req, res) => {
+        //Used sharp module to resize the image and convert it to .png
+        const buffer = await sharp(req.file.buffer)
+            .resize({ width: 250, height: 250 })
+            .png()
+            .toBuffer();
+        req.user.avatar = buffer;
+        await req.user.save();
+        res.send();
+    },
     //Handle any uncought errors(handling express errors)
     (error, req, res, next) => {
         res.status(400).send({ error: error.message });
@@ -149,23 +156,23 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
     req.user.avatar = undefined;
     await req.user.save();
     res.send();
-})
+});
 
 //Serve up avatar image
 //GET /users/:id/avatar
 router.get('/users/:id/avatar', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id)
+        const user = await User.findById(req.params.id);
         if (!user || !user.avatar) {
-            throw new Error()
+            throw new Error();
         }
         //Setting response header ('key', 'value')
-        res.set('Content-Type', 'image/png')
-        res.send(user.avatar)
+        res.set('Content-Type', 'image/png');
+        res.send(user.avatar);
     } catch (e) {
-        res.status(404).send()
+        res.status(404).send();
     }
-})
+});
 
 module.exports = router;
 
