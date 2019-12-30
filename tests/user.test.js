@@ -119,3 +119,39 @@ test('Should not update invalid user fields', async () => {
         })
         .expect(400);
 });
+
+// Should not signup user with invalid password
+test('Should not signup user with invalid password', async () => {
+    const response = await request(app)
+        .post('/users')
+        .send({
+            name: 'mike',
+            email: 'google@google.com',
+            password: '123',
+        })
+        .expect(400);
+});
+
+// Should not signup user with invalid email
+test('Should not signup user with invalid email', async () => {
+    const response = await request(app)
+        .post('/users')
+        .send({
+            name: 'mike',
+            email: 'google@g',
+            password: '123',
+        })
+        .expect(400);
+});
+
+// Should not signup user with invalid name
+test('Should not signup user with invalid name', async () => {
+    const response = await request(app)
+        .post('/users')
+        .send({
+            name: '',
+            email: 'google@google.com',
+            password: '1234ssss',
+        })
+        .expect(400);
+});
